@@ -28,6 +28,17 @@ stoneTex = load_texture('stroke_mono.png')
 
 buildToolEntity = Entity(model='cube',texture=wireTex)
 
+class BTYPE:
+    stone= color.rgb(255,255,255) 
+    grass= color.rgb(0,255,0)
+    magma= color.rgb(255, 0, 0)
+    diamond= color.rgb(0,0,255) 
+
+blockType = BTYPE.stone
+# buildMode = -1  # -1 is OFF, 1 is ON, we start with it off
+
+
+
 
 def buildTool():
     buildToolEntity.position = round(subject.position +camera.forward * 3)
@@ -35,6 +46,7 @@ def buildTool():
     buildToolEntity.y = round(buildToolEntity.y)
     buildToolEntity.x =round(buildToolEntity.x)
     buildToolEntity.z = round(buildToolEntity.z)
+    buildToolEntity.color = blockType
 
 #so how were building is essentialy creating a duplicate of the buildToolEntity
 #we then give it a collider, and assign it a texture of stone
@@ -42,6 +54,7 @@ def build():
     tempPlaceBlock = duplicate(buildToolEntity)
     tempPlaceBlock.collider = 'cube'
     tempPlaceBlock.texture = stoneTex
+    tempPlaceBlock.color = blockType
     tempPlaceBlock.shake(duration=0.5,speed=0.01)
 
 
@@ -50,6 +63,7 @@ def build():
 
 ##temp measure put in place bc quitting at bottom sucks id rather click a button
 def input(key):
+    global blockType
     if key == 'q' or key == 'escape':
         quit()
     #delete later
@@ -63,7 +77,14 @@ def input(key):
         hoveredBlock = mouse.hovered_entity
         destroy(hoveredBlock)
     
-    
+    if key == '1': 
+        blockType=BTYPE.stone
+    if key == '2': 
+        blockType=BTYPE.grass
+    if key == '3': 
+        blockType=BTYPE.magma
+    if key == '4': 
+        blockType=BTYPE.diamond
 
 
 
