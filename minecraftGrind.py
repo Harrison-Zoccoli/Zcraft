@@ -89,6 +89,9 @@ def input(key):
         generating *= -1
         canGenerate *= -1
 
+    
+        
+
 def update():
     global prevZ, prevX, prevTime, genSpeed, perCycle
     global rad, origin, generating, canGenerate
@@ -105,7 +108,8 @@ def update():
         for i in range(perCycle):
             genTerrain()
         prevTime = time.time() 
-     
+
+
     # #incase we glitch through the floor this will reset us (shouldnt happen unless laggy or if screensharing)
     # if subject.y < -amp-1:
     #     subject.y = 2 + floor((noise([subject.x/freq, subject.z/freq]))*amp)
