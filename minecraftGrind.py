@@ -203,7 +203,7 @@ def genTerrain():
         theta += 45/rad
     else: 
         rad += 0.5
-    if theta >= 360:
+    if theta>=360:
         theta = 0
         rad += 0.5
 
