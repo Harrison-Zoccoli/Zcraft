@@ -14,7 +14,7 @@ from numpy import radians
 
 app= Ursina()
 
-window.color = color.rgb(0, 200, 211)
+window.color = color.rgb(0,200, 211)
 window.exit_button.visible = False
 
 prevTime = time.time()
@@ -25,15 +25,15 @@ scene.fog_density = 0.02
 grassStrokeTex = 'grass_14.png'
 monoTex = 'stroke_mono.png'
 wireTex= 'wireframe.png'
-stoneTex= 'grass_mono.png'
+stoneTex='grass_mono.png'
 
-buildToolEntity = Entity(model='cube', texture=wireTex)
+buildToolEntity = Entity(model='cube',texture=wireTex)
 
 class BTYPE:
-    stone=color.rgb(255, 255, 255) 
-    grass=color.rgb(0, 255, 0)
-    magma = color.rgb(255, 80, 100)
-    diamond = color.rgb(255, 0, 0)
+    stone=color.rgb(255,255, 255) 
+    grass=color.rgb(0,255, 0)
+    magma =color.rgb(255,0,0)
+    diamond = color.rgb(0, 0,255)
 
 blockType = BTYPE.stone
 buildMode = -1  # -1 is OFF, 1 is ON, we start with it off
@@ -73,21 +73,21 @@ def input(key):
         hoveredBlock = mouse.hovered_entity
         destroy(hoveredBlock)
     
-    if key == 'b':
-        buildMode *= -1
+    if key =='b':
+        buildMode*= -1
 
-    if key == '1': 
+    if key =='1': 
         blockType= BTYPE.stone
     if key == '2': 
         blockType = BTYPE.grass
-    if key == '3': 
-        blockType = BTYPE.magma
+    if key== '3': 
+        blockType =BTYPE.magma
     if key == '4': 
         blockType = BTYPE.diamond
 
     if key == 'g': 
         generating *= -1
-        canGenerate *= -1
+        canGenerate*= -1
 
     
         
@@ -95,19 +95,19 @@ def input(key):
 def update():
     global prevZ, prevX, prevTime, genSpeed, perCycle
     global rad, origin, generating, canGenerate
-    if abs(subject.z - prevZ) > 1 or abs(subject.x - prevX) > 1:
+    if abs(subject.z-prevZ) > 1 or abs(subject.x-prevX) >1:
         origin = subject.position
         rad = 0
         generating = 1 * canGenerate
         prevZ = subject.z
-        prevX = subject.x
+        prevX= subject.x
  
     generateShell()
  
-    if time.time() - prevTime > genSpeed:
+    if time.time()- prevTime > genSpeed:
         for i in range(perCycle):
             genTerrain()
-        prevTime = time.time() 
+        prevTime= time.time() 
 
 
     # #incase we glitch through the floor this will reset us (shouldnt happen unless laggy or if screensharing)
@@ -120,11 +120,11 @@ def update():
 ###Variables
 noise=PerlinNoise(octaves=1, seed=99)
 
-subsets = []
+subsets=[]
 subCubes = []
 generating= 1  # -1 if off.
 canGenerate =1  # -1 if off.
-genSpeed =0
+genSpeed=0
 perCycle =16
 currentCube =0
 currentSubset =0
@@ -132,27 +132,27 @@ currentSubset =0
 numSubsets = 420
 numSubCubes = 16
 theta = 0
-rad = 0
- #dictionary used for recording whether or not terrain blocks exist
- #at location specified in key
+rad =0
+#dictionary used for recording whether or not terrain blocks exist
+#at location specified in key
 subDic = {}
 
 # Create subCubes with textures
 for i in range(numSubCubes):
-    bud = Entity(model='cube', texture=stoneTex)
+    bud = Entity(model='cube',texture=stoneTex)
     bud.disable()
     subCubes.append(bud)
  
 # Create subsets with textures 
 for i in range(numSubsets):
-    bud = Entity(model=None, texture=grassStrokeTex)
+    bud = Entity(model=None,texture=grassStrokeTex)
     bud.disable()
     subsets.append(bud)
 
 def genPerlin(_x, _z):
-    y = 0
+    y=0
     freq = 64
-    amp = 42      
+    amp =42      
     y += ((noise([_x/freq, _z/freq]))*amp)
     freq = 32
     amp = 21
@@ -166,8 +166,8 @@ def genTerrain():
     if generating == -1: return
  
     # Decide where we should place new terrain cube
-    x = floor(origin.x + sin(radians(theta)) * rad)
-    z = floor(origin.z + cos(radians(theta)) * rad)
+    x = floor(origin.x+sin(radians(theta)) * rad)
+    z = floor(origin.z+cos(radians(theta)) * rad)
 
     # Check whether there is terrain here already so we dont repeat
     if subDic.get('x'+str(x)+'z'+str(z)) != 'i':
@@ -179,7 +179,7 @@ def genTerrain():
         subCubes[currentCube].y = genPerlin(x, z)
         subCubes[currentCube].texture = stoneTex  # Ensure texture is set
         # Don't disable before combining
-        currentCube += 1
+        currentCube+= 1
  
         if currentCube == numSubCubes:
             # Before combining, make sure all subcubes have textures
