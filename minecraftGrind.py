@@ -10,7 +10,7 @@ from nMap import nMap
 from numpy import sin
 from numpy import cos
 from numpy import radians
-
+#####the issue appears to be with the combine feature, seems to be due to a version missmatch tommorow check video, description, comments to see if there are solutions. if not lets recode for better optimization.
 
 app= Ursina()
 
@@ -27,6 +27,7 @@ monoTex = 'stroke_mono.png'
 wireTex= 'wireframe.png'
 stoneTex='grass_mono.png'
 
+<<<<<<< HEAD
 buildToolEntity = Entity(model='cube',texture=wireTex)
 
 class BTYPE:
@@ -34,6 +35,20 @@ class BTYPE:
     grass=color.rgb(0,255, 0)
     magma =color.rgb(255,0,0)
     diamond = color.rgb(0, 0,255)
+=======
+
+cubeTex = 'block_texture.png'
+
+cubeModel = 'block2.obj'
+
+buildToolEntity = Entity(model='cube', texture=wireTex)
+
+class BTYPE:
+    stone=color.rgb(255, 255, 255) 
+    grass=color.rgb(0, 255, 0)
+    magma = color.rgb(255, 0, 0)
+    diamond = color.rgb(0, 0, 255)
+>>>>>>> 826ccf6
 
 blockType = BTYPE.stone
 buildMode = -1  # -1 is OFF, 1 is ON, we start with it off
@@ -87,10 +102,21 @@ def input(key):
 
     if key == 'g': 
         generating *= -1
+<<<<<<< HEAD
         canGenerate*= -1
 
     
         
+=======
+        canGenerate *= -1
+    
+    if key == 'shift':
+        subject.speed = 7.5
+        subject.gravity = 0.1
+    if key == 'shift up':
+        subject.speed = playerSpeed
+        subject.gravity = gravity
+>>>>>>> 826ccf6
 
 def update():
     global prevZ, prevX, prevTime, genSpeed, perCycle
@@ -98,6 +124,7 @@ def update():
     if abs(subject.z-prevZ) > 1 or abs(subject.x-prevX) >1:
         origin = subject.position
         rad = 0
+        theta = 0
         generating = 1 * canGenerate
         prevZ = subject.z
         prevX= subject.x
@@ -120,43 +147,86 @@ def update():
 ###Variables
 noise=PerlinNoise(octaves=1, seed=99)
 
+<<<<<<< HEAD
 subsets=[]
 subCubes = []
 generating= 1  # -1 if off.
 canGenerate =1  # -1 if off.
 genSpeed=0
 perCycle =16
+=======
+
+megasets = []
+subsets = []
+subCubes = []
+generating= 1  # -1 if off.
+canGenerate =1  # -1 if off.
+genSpeed =0
+perCycle =32
+>>>>>>> 826ccf6
 currentCube =0
 currentSubset =0
 
-numSubsets = 420
-numSubCubes = 16
+numSubsets = 420 #how many combine to form megaset
+numSubCubes = 32
 theta = 0
 rad =0
 #dictionary used for recording whether or not terrain blocks exist
 #at location specified in key
 subDic = {}
+caveDic = { 'x9z9' : 'cave', 
+            'x10z9' : 'cave',
+            'x11z9' : 'cave', 
+             }
 
-# Create subCubes with textures
+
+
+# Use the same texture throughout
 for i in range(numSubCubes):
+<<<<<<< HEAD
     bud = Entity(model='cube',texture=stoneTex)
+=======
+    bud = Entity(model=cubeModel, texture=cubeTex)
+>>>>>>> 826ccf6
     bud.disable()
     subCubes.append(bud)
+
  
 # Create subsets with textures 
+# for i in range(numSubsets):
+#     bud = Entity(model=None, texture=grassStrokeTex)
+#     bud.disable()
+#     subsets.append(bud)
 for i in range(numSubsets):
+<<<<<<< HEAD
     bud = Entity(model=None,texture=grassStrokeTex)
+=======
+    bud = Entity(model=None)
+    bud.texture = cubeTex
+>>>>>>> 826ccf6
     bud.disable()
     subsets.append(bud)
 
+
 def genPerlin(_x, _z):
+<<<<<<< HEAD
     y=0
     freq = 64
     amp =42      
+=======
+    y = 0
+    freq = 128
+    amp = 42      
+>>>>>>> 826ccf6
     y += ((noise([_x/freq, _z/freq]))*amp)
     freq = 32
     amp = 21
     y += ((noise([_x/freq, _z/freq]))*amp)
+
+    #creating caves
+    if caveDic.get('x' +str(int(_x))+'z'+str(int(_z))) == 'cave':
+        y-=9
+
     return floor(y)
 
 def genTerrain():
@@ -177,23 +247,35 @@ def genTerrain():
         subDic['x'+str(x)+'z'+str(z)] = 'i'
         subCubes[currentCube].parent = subsets[currentSubset]
         subCubes[currentCube].y = genPerlin(x, z)
+<<<<<<< HEAD
         subCubes[currentCube].texture = stoneTex  # Ensure texture is set
         # Don't disable before combining
         currentCube+= 1
  
+=======
+        
+        currentCube += 1
+
+        # When combining, don't override textures
+>>>>>>> 826ccf6
         if currentCube == numSubCubes:
-            # Before combining, make sure all subcubes have textures
-            for cube in subCubes[:numSubCubes]:
-                if cube.parent == subsets[currentSubset]:
-                    cube.texture = stoneTex
-            
-            # Combine and ensure the subset has texture
+
             subsets[currentSubset].combine(auto_destroy=False)
+            subsets[currentSubset].texture = cubeTex
             subsets[currentSubset].enable()
-            subsets[currentSubset].texture = grassStrokeTex  # Apply texture after combining
-            subsets[currentSubset].color = color.white  # Ensure proper coloring
+            
             currentSubset += 1
             currentCube = 0
+
+            if currentSubset == numSubsets:
+                megasets.append(Entity(texture=cubeTex))  # Don't set texture here
+                for s in subsets:
+                    s.parent = megasets[-1]
+                megasets[-1].combine(auto_destroy=False)
+                currentSubset = 0
+                print("made megaset" + str(len(megasets)))
+
+
     else:
         pass
         # There was terrain already there, so
@@ -221,9 +303,17 @@ def generateShell():
         z=shellies[i].z =floor((i%shellWidth) + subject.z - 0.5*shellWidth)
         shellies[i].y = genPerlin(x, z)
 
-subject =FirstPersonController()
+
+
+
+
+gravity = 0.5
+playerSpeed = 5
+
+subject = FirstPersonController(speed=playerSpeed)
+subject.gravity = gravity
+
 subject.cursor.visible = False
-subject.gravity = 0.5
 subject.x = subject.z = 5
 subject.y = 64
 prevZ =subject.z
