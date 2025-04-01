@@ -27,15 +27,6 @@ monoTex = 'stroke_mono.png'
 wireTex= 'wireframe.png'
 stoneTex='grass_mono.png'
 
-<<<<<<< HEAD
-buildToolEntity = Entity(model='cube',texture=wireTex)
-
-class BTYPE:
-    stone=color.rgb(255,255, 255) 
-    grass=color.rgb(0,255, 0)
-    magma =color.rgb(255,0,0)
-    diamond = color.rgb(0, 0,255)
-=======
 
 cubeTex = 'block_texture.png'
 
@@ -48,7 +39,6 @@ class BTYPE:
     grass=color.rgb(0, 255, 0)
     magma = color.rgb(255, 0, 0)
     diamond = color.rgb(0, 0, 255)
->>>>>>> 826ccf6
 
 blockType = BTYPE.stone
 buildMode = -1  # -1 is OFF, 1 is ON, we start with it off
@@ -102,12 +92,6 @@ def input(key):
 
     if key == 'g': 
         generating *= -1
-<<<<<<< HEAD
-        canGenerate*= -1
-
-    
-        
-=======
         canGenerate *= -1
     
     if key == 'shift':
@@ -116,7 +100,6 @@ def input(key):
     if key == 'shift up':
         subject.speed = playerSpeed
         subject.gravity = gravity
->>>>>>> 826ccf6
 
 def update():
     global prevZ, prevX, prevTime, genSpeed, perCycle
@@ -147,14 +130,6 @@ def update():
 ###Variables
 noise=PerlinNoise(octaves=1, seed=99)
 
-<<<<<<< HEAD
-subsets=[]
-subCubes = []
-generating= 1  # -1 if off.
-canGenerate =1  # -1 if off.
-genSpeed=0
-perCycle =16
-=======
 
 megasets = []
 subsets = []
@@ -163,7 +138,6 @@ generating= 1  # -1 if off.
 canGenerate =1  # -1 if off.
 genSpeed =0
 perCycle =32
->>>>>>> 826ccf6
 currentCube =0
 currentSubset =0
 
@@ -183,11 +157,7 @@ caveDic = { 'x9z9' : 'cave',
 
 # Use the same texture throughout
 for i in range(numSubCubes):
-<<<<<<< HEAD
-    bud = Entity(model='cube',texture=stoneTex)
-=======
     bud = Entity(model=cubeModel, texture=cubeTex)
->>>>>>> 826ccf6
     bud.disable()
     subCubes.append(bud)
 
@@ -198,26 +168,16 @@ for i in range(numSubCubes):
 #     bud.disable()
 #     subsets.append(bud)
 for i in range(numSubsets):
-<<<<<<< HEAD
-    bud = Entity(model=None,texture=grassStrokeTex)
-=======
     bud = Entity(model=None)
     bud.texture = cubeTex
->>>>>>> 826ccf6
     bud.disable()
     subsets.append(bud)
 
 
 def genPerlin(_x, _z):
-<<<<<<< HEAD
-    y=0
-    freq = 64
-    amp =42      
-=======
     y = 0
     freq = 128
     amp = 42      
->>>>>>> 826ccf6
     y += ((noise([_x/freq, _z/freq]))*amp)
     freq = 32
     amp = 21
@@ -247,17 +207,10 @@ def genTerrain():
         subDic['x'+str(x)+'z'+str(z)] = 'i'
         subCubes[currentCube].parent = subsets[currentSubset]
         subCubes[currentCube].y = genPerlin(x, z)
-<<<<<<< HEAD
-        subCubes[currentCube].texture = stoneTex  # Ensure texture is set
-        # Don't disable before combining
-        currentCube+= 1
- 
-=======
         
         currentCube += 1
 
         # When combining, don't override textures
->>>>>>> 826ccf6
         if currentCube == numSubCubes:
 
             subsets[currentSubset].combine(auto_destroy=False)
